@@ -34,6 +34,15 @@
     border: none;
   }
 
+  .places-list {
+    list-style: none;
+  }
+
+  .location-item:hover {
+    color: white;
+    background-color: grey;
+  }
+
   #map {
     bottom:0px;
     height: 100%;
@@ -63,13 +72,10 @@
     width: 84%;
   }
 
-  .search-box > label > input {
+  .search-box > input {
     width: 100%;
-    padding: 10px;
-  }
-
-  .searchinput {
-    display: block;
+    padding: 12px 0px 12px 2px;
+    margin-bottom: 10px;
   }
 
 /*  .searchinput span {
