@@ -1,36 +1,41 @@
 
 // Locations for the app. Objects.
-
 var locations = [
 	{
 		"title" : "Shizen Vegan Sushi Bar", 
 		"location" : { "lat" : 37.768313, "lng" : -122.421643 },
-        "foursquareid" : "54a8b5d1498ef8abe40ce6b3"
+        "foursquareid" : "54a8b5d1498ef8abe40ce6b3",
+        "rating" : "loading"
 	},
     {
     	"title" : "Halu Ramen",
     	"location" : { "lat" : 37.782568, "lng" : -122.466456 },
-        "foursquareid" : "4a865e24f964a520fe0020e3"
+        "foursquareid" : "4a865e24f964a520fe0020e3",
+        "rating" : "loading"
     },
     {
     	"title" : "Gracias Madre San Francisco",
     	"location" : { "lat" : 37.761572, "lng" : -122.419080 },
-        "foursquareid" : "4b4955ccf964a520b86d26e3"
+        "foursquareid" : "4b4955ccf964a520b86d26e3",
+        "rating" : "loading"
     },
     {
     	"title" : "No No Burger",
     	"location" : { "lat" : 37.769769, "lng" : -122.412049 },
-        "foursquareid" : "5650e4ab498edd90781e193d"
+        "foursquareid" : "5650e4ab498edd90781e193d",
+        "rating" : "loading"
     },
     {
     	"title" : "Nourish Cafe",
     	"location" : { "lat" : 37.785241, "lng" : -122.464783 },
-        "foursquareid" : "54ea1afc498e12af65963097"
+        "foursquareid" : "54ea1afc498e12af65963097",
+        "rating" : "loading"
     },
     {
     	"title" : "Thai Idea",
     	"location" : { "lat" : 37.783457, "lng" : -122.419116 },
-        "foursquareid" : "4e7d7aebf5b9644b441e28f3"
+        "foursquareid" : "4e7d7aebf5b9644b441e28f3",
+        "rating" : "loading"
     }
 ];
 
@@ -45,9 +50,55 @@ var Location = function(data) {
 // create a new array for the map
 var map;
 
+// info window global variable for google maps api
 var largeInfoWindow;
+
 // create a blank array for all listing markers
 var markers = [];
+
+// counter for the foursquare API calls on success and error
+var apiCallsCompleted = 0;
+
+function apiCallBack(index, rating) {
+    apiCallsCompleted++;
+    console.log("total calls" + apiCallsCompleted);
+    console.log("rating" + rating);
+    locations[index].rating = rating;
+    if (apiCallsCompleted >= locations.length) {
+        appLoader();
+    }
+}
+
+
+function fourSquareData(index) {
+    var apiURL = 'https://api.foursquare.com/v2/venues/';
+    var foursquareClientID = 'A2ZC3EKQFCXLXBEJPXQPA5YVVDG1EZYTW453HM4FY1HPOWS4'
+    var foursquareSecret ='VXX1VWQ1JK1XDTCNYB5JYCILUXQ5MG3X5WIAOL1WTFHCQJSW'
+    var foursquareVersion = '20170112';
+    var foursquareid = locations[index].foursquareid;
+
+    // URL using variables above
+    var foursquareURL = apiURL + foursquareid + '?client_id=' + foursquareClientID +  '&client_secret=' + foursquareSecret +'&v=' + foursquareVersion;
+
+    $.ajax({
+        "url" : foursquareURL,
+        "datatype" : "jsonp",
+        "success" : function(response) {
+            console.log(response);
+            resp = response.response.venue.rating;
+            var rating = "Not yet rated"
+            if (resp > 0) {
+                rating = resp;
+            } 
+            apiCallBack(index, rating);
+        },
+        "error" : function(error) {
+            console.log('API error', foursquareid);
+            var rating = "Could not load results api error";
+            apiCallBack(index, rating)
+        }
+    });
+};
 
 function initMap() {
    // Map Constructor 
@@ -57,6 +108,14 @@ function initMap() {
     	styles: styles2,
     	mapTypeControl: false
     });
+
+    for (var i = 0; i < locations.length; i++){
+        fourSquareData(i);
+    }
+}
+
+
+function appLoader() {
 
     var largeInfoWindow = new google.maps.InfoWindow();
 
@@ -69,6 +128,7 @@ function initMap() {
     var bounds = new google.maps.LatLngBounds();
 
     for (var i = 0; i < locations.length; i++) {
+        var rating = locations[i].rating;
         var position = locations[i].location;
         var title = locations[i].title;
         // setting the marker and dropping it on each location.
@@ -83,9 +143,11 @@ function initMap() {
         // Push the marker to our array of markers
         markers.push(locations[i].marker);
 
+        
+
         // Create an onclick event to open an infowindow at each marker.
         locations[i].marker.addListener('click', function(){
-            populateInfoWindow(this, largeInfoWindow);
+            populateInfoWindow(this, rating, largeInfoWindow);
         });
         // two event listeners - one for mouse over, one ofr mouseout,
         // to change the colors back and forth
@@ -110,18 +172,19 @@ function initMap() {
     });
 };
 
+
 function mapError() {
     alert("Sorry!  Google Maps could not be loaded");
 }
 
-function populateInfoWindow(marker, infowindow) {
+function populateInfoWindow(marker, rating, infowindow) {
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
-        infowindow.setContent('<div>' + marker.title + '</div>');
+        infowindow.setContent('<div>' + marker.title + ' Rating: ' + rating + '</div>');
         infowindow.open(map, marker);
         // Making sure the marker property is cleared if the infowindow is closed.
         infowindow.addListener('closeclick',function(){
-            infowindow.setMarker(null);
+            infowindow.setMap(null);
         });
 
         var streetViewService = new google.maps.StreetViewService();
@@ -135,7 +198,7 @@ function populateInfoWindow(marker, infowindow) {
                 var nearStreetViewLocation = data.location.latLng;
                 var heading = google.maps.geometry.spherical.computeHeading(
                     nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+                infowindow.setContent('<div>' + marker.title + ' Rating: ' + rating + '</div><div id="pano"></div>');
                 var panoramaOptions = {
                     position: nearStreetViewLocation,
                     pov: {
@@ -146,7 +209,7 @@ function populateInfoWindow(marker, infowindow) {
                 var panorama = new google.maps.StreetViewPanorama(
                     document.getElementById('pano'), panoramaOptions);
             } else {
-              infowindow.setContent('<div>' + marker.title + '</div>' +
+              infowindow.setContent('<div>' + marker.title + ' Rating: ' + rating + '</div>' +
                 '<div>No Street View Found</div>');
             }
         };
@@ -215,20 +278,7 @@ var AppViewModel = function() {
 };
 
 
-var apiURL = 'https://api.foursquare.com/v2/venues/';
-var foursquareClientID = 'A2ZC3EKQFCXLXBEJPXQPA5YVVDG1EZYTW453HM4FY1HPOWS4'
-var foursquareSecret ='VXX1VWQ1JK1XDTCNYB5JYCILUXQ5MG3X5WIAOL1WTFHCQJSW'
-var foursquareVersion = '20170112';
-var venueFoursquareID = "4b4aac62f964a520a98c26e3";
 
-var foursquareURL = apiURL + venueFoursquareID + '?client_id=' + foursquareClientID +  '&client_secret=' + foursquareSecret +'&v=' + foursquareVersion;
-
-$.ajax({
-  url: foursquareURL, 
-  success: function(data) {
-    console.log(data);
-  } 
-});
 
 // instantiate the ViewModel using the operator and apply bindings
 var appViewModel = new AppViewModel();
