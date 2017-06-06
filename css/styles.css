@@ -1,3 +1,4 @@
+
   html,
   body {
     font-family: Arial, sans-serif;
@@ -6,10 +7,10 @@
     padding: 0;
   }
 
-  .container {
+/*  #container {
     height: 100%;
     position: relative;
-  }
+  }*/
 
   input {
     font-size: 12px;
@@ -78,7 +79,7 @@
     margin-bottom: 10px;
   }
 
-/*  .searchinput span {
+   .searchinput span {
     position: absolute;
     z-index: 1;
     cursor: text;
@@ -87,7 +88,7 @@
     padding: 7px;
     line-height: 17px;
     margin-left: 2px;
-  }*/
+  }
 
   .searchinput input {
     z-index: 0;
@@ -96,21 +97,4 @@
     font-inherit;
     line-height: 17px;
   }
-  
-  .text {
-    font-size: 12px;
-  }
-
-  #toggle-drawing {
-    width: 27%;
-    position: relative;
-    margin-left: 10px;
-  }
-
-  #zoom-to-area-text {
-    width: 70%;
-  }
-
-  #zoom-to-area {
-    width: 24%;
-  }
+}
