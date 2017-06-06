@@ -1,9 +1,9 @@
 
 // Great Vegan restaurant locations in SF for the app
 var locations = [
-	{
-		"title" : "Shizen Vegan Sushi Bar",
-		"location" : { "lat" : 37.768313, "lng" : -122.421643 },
+    {
+        "title" : "Shizen Vegan Sushi Bar",
+        "location" : { "lat" : 37.768313, "lng" : -122.421643 },
         "foursquareid" : "54a8b5d1498ef8abe40ce6b3",
         "rating" : "loading"
 	},

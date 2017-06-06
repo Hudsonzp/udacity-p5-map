@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,38 +14,37 @@
         <div class="container-fluid">
             <!-- begin sidebar -->
             <div class="row">
-                <div class="col-sm-3 col-log-2">
+                <div class="col-sm-3 col-lg-2">
                     <nav class="navbar navbar-default navbar-fixed-side">
-                        <div class="container">
-                            <div class="navbar-header">
-                                <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                                <a class="navbar-brand" href="./">My favorite vegan spots</a>
-                            </div>
-                            <div class="collapse navbar-collapse">
-                                <form class="navbar-form navbar-left">
-                                    <div class="form-group">
-                                        <input data-bind="textInput: searchEntry, event: { keyup: onSearchEntry }" type="text" placeholder="Search for Vegan restaurants" class="form-control"/>
-                                    </div>
-                                </form>
-                                <ul data-bind="foreach: appLocations" class="collapse navbar-collapse">
-                                    <li data-bind="text: title, click: $parent.listSelect" class="location-item">
-                                        <a href="#" data-bind="text: title, click: $parent.listSelect"></a>
-                                    </li>
-                                </ul>
-                            <button id="show-listings" type="button" value="Show Pins"></button>
-                            <button id="hide-listings" type="button" value="Hide Pins"></button>
+                        <div class="navbar-header">
+                            <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="#">Vegan Food - SF</a>
+                        </div>
+                        <div class="collapse navbar-collapse">
+                            <form class="navbar-form" role="search">
+                                <div class="form-group">
+                                    <input data-bind="textInput: searchEntry, event: { keyup: onSearchEntry }" type="text" placeholder="Search..." class="form-control"/>
+                                </div>
+                            </form>
+                            <ul data-bind="foreach: appLocations" class="nav navbar-nav">
+                                <li data-bind="click: $parent.listSelect"><a href="#" data-bind="text: title"></a></li>
+                            </ul>
+                             <button id="show-listings" type="submit" class="btn btn-default navbar-btn" value="Show Pins">Show Pins</button>
+                            <button id="hide-listings" type="submit" class="btn btn-default navbar-btn" value="Hide Pins">Hide Pins</button>
                         </div>
                     </nav>
                 </div>
+                <!-- close out navbar colum -->
+                <div class="col-sm-9 col-lg-10" id="map">
+                </div>
+                <!-- close out map -->
             </div>
-        </div>
-        <div id="container">
-            <div id="map"></div>
+            <!-- close of row and page -->
         </div>
         <!-- end container -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
