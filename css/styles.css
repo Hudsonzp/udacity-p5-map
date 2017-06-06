@@ -12,35 +12,35 @@
     height: 120px;
   }
 
-  /* Custom, iPhone Retina */
+  /* Custom with iPhone Retina */
   @media only screen and (min-width : 320px){
     #map {
       padding-top: 100%;
     }
   }
 
-  /* Extra Small Devices, Phones */
+  /* Extra Small Devices primarily Phones */
   @media only screen and (min-width : 480px){
     #map {
       padding-top: 52%;
     }
   }
 
-  /* Small Devices, Tablets */
+  /* Small Devices and Tablets */
   @media only screen and (min-width : 768px){
     #map {
       padding-top: 45%;
     }
   }
 
-  /* Medium Devices, Desktops */
+  /* Medium Devices like Desktops */
   @media only screen and (min-width : 992px){
     #map {
       padding-top: 31%;
     }
   }
 
-  /* Large Devices, Wide Screens */
+  /* Large Devices such as Wide Screens */
   @media only screen and (min-width : 1200px){
     #map {
       padding-top: 25%;
