@@ -6,7 +6,7 @@ var locations = [
         "location" : { "lat" : 37.768313, "lng" : -122.421643 },
         "foursquareid" : "54a8b5d1498ef8abe40ce6b3",
         "rating" : "loading"
-	},
+    },
     {
     	"title" : "Halu Ramen",
     	"location" : { "lat" : 37.782568, "lng" : -122.466456 },
