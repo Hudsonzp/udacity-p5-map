@@ -42,8 +42,8 @@ var locations = [
 // Setting up for each individual location
 var Location = function(data) {
 	var self = this;
-	self.title = data.title,
-	self.location = data.location
+	self.title = data.title;
+	self.location = data.location;
 };
 
 // create a new array for the map
@@ -74,8 +74,8 @@ function apiCallBack(index, rating) {
 // Calls out to foursquare api
 function fourSquareData(index) {
     var apiURL = 'https://api.foursquare.com/v2/venues/';
-    var foursquareClientID = 'A2ZC3EKQFCXLXBEJPXQPA5YVVDG1EZYTW453HM4FY1HPOWS4'
-    var foursquareSecret ='VXX1VWQ1JK1XDTCNYB5JYCILUXQ5MG3X5WIAOL1WTFHCQJSW'
+    var foursquareClientID = 'A2ZC3EKQFCXLXBEJPXQPA5YVVDG1EZYTW453HM4FY1HPOWS4';
+    var foursquareSecret ='VXX1VWQ1JK1XDTCNYB5JYCILUXQ5MG3X5WIAOL1WTFHCQJSW';
     var foursquareVersion = '20170112';
     var foursquareid = locations[index].foursquareid;
 
@@ -89,7 +89,7 @@ function fourSquareData(index) {
         "datatype" : "jsonp",
         "success" : function(response) {
             resp = response.response.venue.rating;
-            var rating = "Not yet rated"
+            var rating = "Not yet rated";
             if (resp > 0) {
                 rating = resp;
             }
@@ -98,10 +98,10 @@ function fourSquareData(index) {
         "error" : function(error) {
             console.log('API error for Foursquareid ' + foursquareid);
             var rating = "Could not load results api error";
-            apiCallBack(index, rating)
+            apiCallBack(index, rating);
         }
     });
-};
+}
 
 // Basic google maps constructor
 function initMap() {
@@ -155,10 +155,17 @@ function appLoader() {
         // Push the marker to our array of markers
         markers.push(locations[i].marker);
 
+        // Create an onclick event to toggle the bounce animation
+        // on the marker
+        locations[i].marker.addListener('click', function() {
+            toggleBounce(this);
+        });
+
         // Create an onclick event to open an infowindow at each marker.
         locations[i].marker.addListener('click', function() {
             populateInfoWindow(this, largeInfoWindow);
         });
+
 
         // two event listeners - one for mouse over, one ofr mouseout,
         // to change the colors back and forth
@@ -178,23 +185,36 @@ function appLoader() {
     }
 
     // sets map and fits bounds.
-    map.fitBounds(bounds);
+    google.maps.event.addDomListener(window, 'resize', function() {
+         map.fitBounds(bounds);
+    });
 
     // Show pins when clicked (just a nice user function)
-    // TODO: Make search function work with this.
-    document.getElementById('show-listings').addEventListener('click', showListings);
+    // TODO: Change this to click binding with knockout js
+    // document.getElementById('show-listings').addEventListener('click', showListings);
 
-    // Hide all pins when clicked (just a nice user function)
-    // TODO: make search function integrate with this.
-    document.getElementById('hide-listings').addEventListener('click', function() {
-        hideMarkers(markers);
-    });
-};
+    // // Hide all pins when clicked (just a nice user function)
+    // // TODO: Change this to click binding with Knockoutjs
+    // document.getElementById('hide-listings').addEventListener('click', function() {
+    //     hideMarkers(markers);
+    // });
+}
 
 // Errors out for Google maps according to their documentation
 function mapError() {
-    alert("Sorry!  Google Maps could not be loaded");
+    alert("Sorry! SORRY! Google Maps could not be loaded");
 }
+
+// adds a bounce animation to those markers that are selected.
+function toggleBounce(marker) {
+    if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function(){ marker.setAnimation(null); }, 1400);
+    }
+}
+
 
 // populates the boxes that pop up when a marker is clicked.
 function populateInfoWindow(marker, infowindow) {
@@ -233,32 +253,34 @@ function populateInfoWindow(marker, infowindow) {
               infowindow.setContent('<div>' + marker.title + '</div>' +
                 '<div>No Street View Found</div>');
             }
-        };
+        }
         // Use streetview service to get the closest streetview image within
         // 50 meters of the markers position.
         streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
         // Open the infowindow on the correct marker.
         infowindow.open(map, marker);
     }
-};
+}
 
 // This function will loops through the markers array and display them all.
-function showListings() {
-    var bounds = new google.maps.LatLngBounds();
-    // extend the boundaries of the map for each marker and display the marker.
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
-        bounds.extend(markers[i].position);
-    }
-    map.fitBounds(bounds);
-}
+// TODO: Convert these functions to Knockout JS
+// function showListings() {
+//     var bounds = new google.maps.LatLngBounds();
+//     // extend the boundaries of the map for each marker and display the marker.
+//     for (var i = 0; i < markers.length; i++) {
+//         markers[i].setMap(map);
+//         bounds.extend(markers[i].position);
+//     }
+//     map.fitBounds(bounds);
+// }
 
 // this function will loop through listings and hide them all
-function hideMarkers(markers) {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-    }
-}
+// TODO: Convert these functions to knockout JS
+// function hideMarkers(markers) {
+//     for (var i = 0; i < markers.length; i++) {
+//         markers[i].setMap(null);
+//     }
+// }
 
 // sets the marker icon
 function makeMarkerIcon(markerColor) {
@@ -281,7 +303,7 @@ var AppViewModel = function() {
     self.searchEntry = ko.observable('');
     self.listSelect = function(locations) {
         // Open info window on click.
-        google.maps.event.trigger(locations.marker, 'click')
+        google.maps.event.trigger(locations.marker, 'click');
     };
     self.onSearchEntry = function(event) {
         this.appLocations.removeAll();

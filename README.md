@@ -26,4 +26,6 @@ This provides the side navbar styling for my blog.  It uses a basic MIT license.
 * The forever helpful community at Udacity! - https://discussions.udacity.com/
 * Foursquare documentation - https://developer.foursquare.com/
 * Knockout JS library - http://knockoutjs.com
+* Marker animation doc - https://developers.google.com/maps/documentation/javascript/examples/marker-animations
+
 
